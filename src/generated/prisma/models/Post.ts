@@ -29,13 +29,11 @@ export type AggregatePost = {
 export type PostAvgAggregateOutputType = {
   id: number | null
   view_count: number | null
-  author_id: number | null
 }
 
 export type PostSumAggregateOutputType = {
   id: number | null
   view_count: number | null
-  author_id: number | null
 }
 
 export type PostMinAggregateOutputType = {
@@ -48,7 +46,7 @@ export type PostMinAggregateOutputType = {
   updated_at: Date | null
   view_count: number | null
   post_status: $Enums.PostStatus | null
-  author_id: number | null
+  author_id: string | null
 }
 
 export type PostMaxAggregateOutputType = {
@@ -61,7 +59,7 @@ export type PostMaxAggregateOutputType = {
   updated_at: Date | null
   view_count: number | null
   post_status: $Enums.PostStatus | null
-  author_id: number | null
+  author_id: string | null
 }
 
 export type PostCountAggregateOutputType = {
@@ -83,13 +81,11 @@ export type PostCountAggregateOutputType = {
 export type PostAvgAggregateInputType = {
   id?: true
   view_count?: true
-  author_id?: true
 }
 
 export type PostSumAggregateInputType = {
   id?: true
   view_count?: true
-  author_id?: true
 }
 
 export type PostMinAggregateInputType = {
@@ -230,7 +226,7 @@ export type PostGroupByOutputType = {
   updated_at: Date
   view_count: number
   post_status: $Enums.PostStatus
-  author_id: number
+  author_id: string
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -267,7 +263,7 @@ export type PostWhereInput = {
   updated_at?: Prisma.DateTimeFilter<"Post"> | Date | string
   view_count?: Prisma.IntFilter<"Post"> | number
   post_status?: Prisma.EnumPostStatusFilter<"Post"> | $Enums.PostStatus
-  author_id?: Prisma.IntFilter<"Post"> | number
+  author_id?: Prisma.StringFilter<"Post"> | string
   comments?: Prisma.CommentListRelationFilter
 }
 
@@ -300,7 +296,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   updated_at?: Prisma.DateTimeFilter<"Post"> | Date | string
   view_count?: Prisma.IntFilter<"Post"> | number
   post_status?: Prisma.EnumPostStatusFilter<"Post"> | $Enums.PostStatus
-  author_id?: Prisma.IntFilter<"Post"> | number
+  author_id?: Prisma.StringFilter<"Post"> | string
   comments?: Prisma.CommentListRelationFilter
 }, "id">
 
@@ -337,7 +333,7 @@ export type PostScalarWhereWithAggregatesInput = {
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   view_count?: Prisma.IntWithAggregatesFilter<"Post"> | number
   post_status?: Prisma.EnumPostStatusWithAggregatesFilter<"Post"> | $Enums.PostStatus
-  author_id?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  author_id?: Prisma.StringWithAggregatesFilter<"Post"> | string
 }
 
 export type PostCreateInput = {
@@ -350,7 +346,7 @@ export type PostCreateInput = {
   updated_at: Date | string
   view_count?: number
   post_status?: $Enums.PostStatus
-  author_id: number
+  author_id: string
   comments?: Prisma.CommentCreateNestedManyWithoutPostsInput
 }
 
@@ -365,7 +361,7 @@ export type PostUncheckedCreateInput = {
   updated_at: Date | string
   view_count?: number
   post_status?: $Enums.PostStatus
-  author_id: number
+  author_id: string
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostsInput
 }
 
@@ -379,7 +375,7 @@ export type PostUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   view_count?: Prisma.IntFieldUpdateOperationsInput | number
   post_status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  author_id?: Prisma.IntFieldUpdateOperationsInput | number
+  author_id?: Prisma.StringFieldUpdateOperationsInput | string
   comments?: Prisma.CommentUpdateManyWithoutPostsNestedInput
 }
 
@@ -394,7 +390,7 @@ export type PostUncheckedUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   view_count?: Prisma.IntFieldUpdateOperationsInput | number
   post_status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  author_id?: Prisma.IntFieldUpdateOperationsInput | number
+  author_id?: Prisma.StringFieldUpdateOperationsInput | string
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostsNestedInput
 }
 
@@ -409,7 +405,7 @@ export type PostCreateManyInput = {
   updated_at: Date | string
   view_count?: number
   post_status?: $Enums.PostStatus
-  author_id: number
+  author_id: string
 }
 
 export type PostUpdateManyMutationInput = {
@@ -422,7 +418,7 @@ export type PostUpdateManyMutationInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   view_count?: Prisma.IntFieldUpdateOperationsInput | number
   post_status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  author_id?: Prisma.IntFieldUpdateOperationsInput | number
+  author_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PostUncheckedUpdateManyInput = {
@@ -436,7 +432,7 @@ export type PostUncheckedUpdateManyInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   view_count?: Prisma.IntFieldUpdateOperationsInput | number
   post_status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  author_id?: Prisma.IntFieldUpdateOperationsInput | number
+  author_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -464,7 +460,6 @@ export type PostCountOrderByAggregateInput = {
 export type PostAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   view_count?: Prisma.SortOrder
-  author_id?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
@@ -496,7 +491,6 @@ export type PostMinOrderByAggregateInput = {
 export type PostSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   view_count?: Prisma.SortOrder
-  author_id?: Prisma.SortOrder
 }
 
 export type PostScalarRelationFilter = {
@@ -561,7 +555,7 @@ export type PostCreateWithoutCommentsInput = {
   updated_at: Date | string
   view_count?: number
   post_status?: $Enums.PostStatus
-  author_id: number
+  author_id: string
 }
 
 export type PostUncheckedCreateWithoutCommentsInput = {
@@ -575,7 +569,7 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   updated_at: Date | string
   view_count?: number
   post_status?: $Enums.PostStatus
-  author_id: number
+  author_id: string
 }
 
 export type PostCreateOrConnectWithoutCommentsInput = {
@@ -604,7 +598,7 @@ export type PostUpdateWithoutCommentsInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   view_count?: Prisma.IntFieldUpdateOperationsInput | number
   post_status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  author_id?: Prisma.IntFieldUpdateOperationsInput | number
+  author_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PostUncheckedUpdateWithoutCommentsInput = {
@@ -618,7 +612,7 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   view_count?: Prisma.IntFieldUpdateOperationsInput | number
   post_status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  author_id?: Prisma.IntFieldUpdateOperationsInput | number
+  author_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -734,7 +728,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     updated_at: Date
     view_count: number
     post_status: $Enums.PostStatus
-    author_id: number
+    author_id: string
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -1169,7 +1163,7 @@ export interface PostFieldRefs {
   readonly updated_at: Prisma.FieldRef<"Post", 'DateTime'>
   readonly view_count: Prisma.FieldRef<"Post", 'Int'>
   readonly post_status: Prisma.FieldRef<"Post", 'PostStatus'>
-  readonly author_id: Prisma.FieldRef<"Post", 'Int'>
+  readonly author_id: Prisma.FieldRef<"Post", 'String'>
 }
     
 

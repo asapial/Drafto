@@ -1,60 +1,67 @@
-export const emailTemplate=`<!DOCTYPE html>
+import express from 'express'
+const emailVerificationTemplate=(user:any,verificationLink:string)=>{
+    return `
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Email Verification</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:40px 0;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0; background-color:#f4f6f8;">
     <tr>
       <td align="center">
 
-        <!-- Main Card -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.08);">
-          
+        <table width="100%" cellpadding="0" cellspacing="0"
+          style="max-width:600px; background-color:#ffffff; border-radius:12px; overflow:hidden;
+          box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg, #2563eb, #1e40af); padding:30px; text-align:center;">
-              <h1 style="margin:0; font-size:24px; color:#ffffff; font-weight:600;">
-                Verify Your Email
+            <td style="background:linear-gradient(135deg,#2563eb,#1e3a8a); padding:32px; text-align:center;">
+              <h1 style="margin:0; color:#ffffff; font-size:24px; font-weight:600;">
+                Email Verification
               </h1>
             </td>
           </tr>
 
-          <!-- Content -->
+          <!-- Body -->
           <tr>
-            <td style="padding:40px 30px;">
+            <td style="padding:36px 32px;">
               <p style="margin:0 0 16px; font-size:16px; color:#111827;">
-                Hello <strong>{{USER_NAME}}</strong>,
+                Hello <strong>${user.name}</strong>,
               </p>
 
-              <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#374151;">
-                Thank you for creating an account with us. To complete your registration and secure your account, please verify your email address by clicking the button below.
+              <p style="margin:0 0 24px; font-size:15px; line-height:1.6; color:#374151;">
+                Thank you for registering. Please confirm your email address to activate your account.
+                This helps us ensure the security of your account.
               </p>
 
               <!-- Button -->
-              <table cellpadding="0" cellspacing="0" width="100%" style="margin:30px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:32px 0;">
                 <tr>
                   <td align="center">
-                    <a href="{{VERIFICATION_LINK}}"
-                       style="background-color:#2563eb; color:#ffffff; text-decoration:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:600; display:inline-block;">
-                      Verify Email Address
+                    <a href="${verificationLink}"
+                       style="display:inline-block; padding:14px 36px;
+                       background-color:#2563eb; color:#ffffff; text-decoration:none;
+                       font-size:15px; font-weight:600; border-radius:8px;">
+                      Verify Email
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <p style="margin:0 0 16px; font-size:14px; color:#6b7280;">
-                If the button above does not work, copy and paste the following link into your browser:
+              <p style="margin:0 0 10px; font-size:14px; color:#6b7280;">
+                If the button does not work, copy and paste the link below into your browser:
               </p>
 
               <p style="margin:0; font-size:13px; color:#2563eb; word-break:break-all;">
-                {{VERIFICATION_LINK}}
+                ${verificationLink}
               </p>
 
-              <p style="margin:30px 0 0; font-size:14px; color:#6b7280;">
+              <p style="margin:28px 0 0; font-size:14px; color:#6b7280;">
                 If you did not create this account, you can safely ignore this email.
               </p>
             </td>
@@ -77,4 +84,12 @@ export const emailTemplate=`<!DOCTYPE html>
 
 </body>
 </html>
-`
+  `
+}
+
+
+
+
+export const emailTemplate={
+    emailVerificationTemplate
+}

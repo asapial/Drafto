@@ -25,7 +25,7 @@ model Post {
   view_count       Int        @default(0)
   post_status      PostStatus @default(published)
   comments         Comment[]
-  author_id        Int
+  author_id        String
 
   @@index([id])
   @@map("posts")

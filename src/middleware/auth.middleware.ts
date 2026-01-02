@@ -31,7 +31,7 @@ const auth = (allowedRoles?: ("user" | "admin")[]) => {
             if (
                 allowedRoles &&
                 allowedRoles.length > 0 &&
-                !allowedRoles.includes(session.user.role)
+                !allowedRoles.includes(session.user.role!)
             ) {
                 return res.status(403).json({
                     success: false,
