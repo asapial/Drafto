@@ -2,6 +2,8 @@ import express from "express"
 import { postServices } from "./post.service"
 import { string } from "better-auth/*";
 import { type } from "node:os";
+import { validationPaginationAndSorting } from "../../helpers/valiationPaginationAndSorting";
+
 
 
 const postThePost = async (req: express.Request, res: express.Response) => {
@@ -112,7 +114,7 @@ const postThePost = async (req: express.Request, res: express.Response) => {
 
 const getThePost = async (req: express.Request, res: express.Response) => {
   try {
-    const { search, tags,featured } = req.query;
+    const { search, tags, featured, page, limit, sortBy, sortOrder } = req.query;
 
     /* -------------------- Validation -------------------- */
 
@@ -152,14 +154,29 @@ const getThePost = async (req: express.Request, res: express.Response) => {
     }
 
     // Validate `featured`
-    const is_featured:boolean | undefined=featured?(featured==='true'?(true):(featured==='false'?false:undefined)):(undefined);
+    const is_featured: boolean | undefined = featured
+      ? (featured === 'true'
+        ? (true) : (featured === 'false'
+          ? false : undefined))
+      : (undefined);
+
+    // Validate `pagination and sorting`
+
+    const {skip:validateSkip,page: validatePage,limit:validateLimit,sortBy: validateSortBy, sortOrder:vaidateSortOrder }= validationPaginationAndSorting({page:page as string,limit:limit as string,sortBy:sortBy as string,sortOrder:sortOrder as string});
+    
+    
 
     /* -------------------- Service Call -------------------- */
 
     const result = await postServices.getAllPostQuery({
       search: searchingType,
       tags: tagList,
-      is_featured: is_featured
+      is_featured: is_featured,
+      page:validatePage,
+      skip: validateSkip,
+      limit:validateLimit,
+      sortBy: validateSortBy,
+      sortOrder: vaidateSortOrder
     });
 
     return res.status(200).json({

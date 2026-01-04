@@ -1,3 +1,4 @@
+import { skip } from "node:test";
 import { Post } from "../../../generated/prisma/client";
 import { PostWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
@@ -13,7 +14,16 @@ const createPostQuery = async (data: Omit<Post, 'id' | 'created_at' | 'author_id
     return result;
 }
 
-const getAllPostQuery = async (payload: { search: string | undefined, tags: string[] | [] , is_featured:boolean | undefined}) => {
+const getAllPostQuery = async (payload: {
+    search: string | undefined,
+    tags: string[] | [],
+    is_featured: boolean | undefined,
+    page:number,
+    skip: number,
+    limit:number,
+    sortBy: string,
+    sortOrder:string
+}) => {
 
     const searchingCondition: PostWhereInput[] = []
     if (payload.search) {
@@ -48,19 +58,29 @@ const getAllPostQuery = async (payload: { search: string | undefined, tags: stri
         })
     }
 
-    if(payload.is_featured!=undefined){
+    if (payload.is_featured != undefined) {
         searchingCondition.push({
-             is_featured: payload.is_featured,
+            is_featured: payload.is_featured,
         })
     }
 
 
     const result = await prisma.post.findMany({
+        skip:payload.skip,
+        take:payload.limit,
+        orderBy:{
+            [payload.sortBy]:payload.sortOrder
+        },
         where: {
             AND: searchingCondition
         }
     });
-    return result;
+    return {
+        page:payload.page,
+        skip:payload.skip,
+        limit:payload.limit,
+        data:result
+    };
 
 }
 
