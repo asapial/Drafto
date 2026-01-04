@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx watch src/server.ts",
+    "seeding": "npx tsx  src/scripts/seedingAdmin.ts",
     "dmp": "npx prisma migrate dev generate"
   },
   "keywords": [],
