@@ -10,7 +10,8 @@ const router=Router();
 //     res.send("Hello abdullah");
 // })
 
-router.post("/",auth(),postController.postTheUser)
+router.post("/",auth(),postController.postThePost)
+router.get("/",postController.getThePost)
 
 
 

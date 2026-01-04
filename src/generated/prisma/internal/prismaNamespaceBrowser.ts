@@ -81,6 +81,7 @@ export const PostScalarFieldEnum = {
   post_description: 'post_description',
   post_tags: 'post_tags',
   post_thumbnail: 'post_thumbnail',
+  is_featured: 'is_featured',
   published_at: 'published_at',
   created_at: 'created_at',
   updated_at: 'updated_at',

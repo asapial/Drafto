@@ -1,8 +1,10 @@
 import express from "express"
 import { postServices } from "./post.service"
+import { string } from "better-auth/*";
+import { type } from "node:os";
 
 
-const postTheUser = async (req: express.Request, res: express.Response) => {
+const postThePost = async (req: express.Request, res: express.Response) => {
   try {
     const {
       post_title,
@@ -88,7 +90,7 @@ const postTheUser = async (req: express.Request, res: express.Response) => {
 
     /* ---------- Create post ---------- */
 
-    const result = await postServices.createPostQuery(req.body,req.user.id);
+    const result = await postServices.createPostQuery(req.body, req.user.id);
 
     return res.status(201).json({
       success: true,
@@ -108,6 +110,74 @@ const postTheUser = async (req: express.Request, res: express.Response) => {
 
 
 
+const getThePost = async (req: express.Request, res: express.Response) => {
+  try {
+    const { search, tags,featured } = req.query;
+
+    /* -------------------- Validation -------------------- */
+
+    // Validate `search`
+    let searchingType: string | undefined = undefined;
+    if (search !== undefined) {
+      if (typeof search !== "string") {
+        return res.status(400).json({
+          success: false,
+          message: "Search query must be a string.",
+        });
+      }
+      searchingType = search.trim();
+    }
+
+    // Validate `tags`
+    let tagList: string[] = [];
+    if (tags !== undefined) {
+      if (typeof tags !== "string") {
+        return res.status(400).json({
+          success: false,
+          message: "Tags must be a comma-separated string.",
+        });
+      }
+
+      tagList = tags
+        .split(",")
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+
+      if (tagList.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "At least one valid tag is required.",
+        });
+      }
+    }
+
+    // Validate `featured`
+    const is_featured:boolean | undefined=featured?(featured==='true'?(true):(featured==='false'?false:undefined)):(undefined);
+
+    /* -------------------- Service Call -------------------- */
+
+    const result = await postServices.getAllPostQuery({
+      search: searchingType,
+      tags: tagList,
+      is_featured: is_featured
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: result.length,
+      data: result,
+    });
+
+  } catch (error) {
+    console.error("Post fetching failed:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching posts. Please try again.",
+    });
+  }
+};
+
 
 
 
@@ -115,5 +185,6 @@ const postTheUser = async (req: express.Request, res: express.Response) => {
 
 
 export const postController = {
-    postTheUser
+  postThePost,
+  getThePost
 }

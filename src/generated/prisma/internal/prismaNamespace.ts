@@ -898,6 +898,7 @@ export const PostScalarFieldEnum = {
   post_description: 'post_description',
   post_tags: 'post_tags',
   post_thumbnail: 'post_thumbnail',
+  is_featured: 'is_featured',
   published_at: 'published_at',
   created_at: 'created_at',
   updated_at: 'updated_at',
@@ -1045,6 +1046,13 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1083,13 +1091,6 @@ export type EnumCommentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'CommentStatus[]'
  */
 export type ListEnumCommentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommentStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
