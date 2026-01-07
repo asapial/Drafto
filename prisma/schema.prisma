@@ -41,8 +41,8 @@ model Comment {
   updated_at          DateTime?
   comment_status      CommentStatus @default(published)
   comment_parent      Int?
-  posts               Post          @relation(fields: [post_id], references: [id])
-  commentsParents     Comment?      @relation("CommentReplies", fields: [comment_parent], references: [comment_id])
+  posts               Post          @relation(fields: [post_id], references: [id],onDelete: Cascade)
+  commentsParents     Comment?      @relation("CommentReplies", fields: [comment_parent], references: [comment_id],onDelete:Cascade )
   replies             Comment[]     @relation("CommentReplies")
   // comments Comment[]
 

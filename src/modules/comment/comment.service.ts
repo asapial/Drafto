@@ -1,4 +1,3 @@
-import { number } from "better-auth/*"
 import { prisma } from "../../lib/prisma"
 
 const postCommentQuery = async (
@@ -52,11 +51,11 @@ const getCommentByAuthorIdQuery = async (param: string) => {
         where: {
             author_id: param
         },
-        include:{
-            posts:{
-                select:{
-                    post_title:true,
-                    post_description:true
+        include: {
+            posts: {
+                select: {
+                    post_title: true,
+                    post_description: true
                 }
             }
         }
@@ -66,10 +65,67 @@ const getCommentByAuthorIdQuery = async (param: string) => {
 }
 
 
+const deleteCommentByIdQuery = async (params: string, author_id: string) => {
+
+
+
+    const isPresent = await prisma.comment.findFirst({
+        where: {
+            comment_id: Number(params),
+            author_id: author_id
+        }
+    });
+    console.log(params, author_id)
+
+    if (!isPresent) {
+        throw new Error("Comment is not present")
+    }
+
+    const result = await prisma.comment.delete({
+        where: {
+            comment_id: Number(params)
+        }
+    })
+
+    return result;
+}
+
+
+const updateCommentById = async (
+  commentId: number,
+  author_id: string,
+  comment_description: string
+) => {
+
+  const comment = await prisma.comment.findFirst({
+    where: {
+      comment_id: commentId,
+      author_id: author_id,
+    },
+  });
+
+  if (!comment) {
+    throw new Error("Comment not found or you are not authorized");
+  }
+
+  const updated = await prisma.comment.update({
+    where: {
+      comment_id: commentId,
+    },
+    data: {
+      comment_description,
+      updated_at: new Date(),
+    },
+  });
+
+  return updated;
+};
 
 export const commentService = {
     postCommentQuery,
     getCommentByIdQuery,
-    getCommentByAuthorIdQuery
+    getCommentByAuthorIdQuery,
+    deleteCommentByIdQuery,
+    updateCommentById
 }
 
