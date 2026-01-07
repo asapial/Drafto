@@ -35,13 +35,10 @@ model Post {
 model Comment {
   comment_id          Int           @id @default(autoincrement())
   post_id             Int
-  author_id           Int
+  author_id           String
   comment_description String
-  comment_title       String
-  comment_tags        String[]
-  published_at        DateTime
-  created_at          DateTime
-  updated_at          DateTime
+  created_at          DateTime @default(now())
+  updated_at          DateTime?
   comment_status      CommentStatus @default(published)
   comment_parent      Int?
   posts               Post          @relation(fields: [post_id], references: [id])

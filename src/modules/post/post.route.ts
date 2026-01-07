@@ -12,6 +12,7 @@ const router=Router();
 
 router.post("/",auth(),postController.postThePost)
 router.get("/",postController.getThePost)
+router.get("/:id",postController.getThePostById)
 
 
 

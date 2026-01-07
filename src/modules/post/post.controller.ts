@@ -162,9 +162,9 @@ const getThePost = async (req: express.Request, res: express.Response) => {
 
     // Validate `pagination and sorting`
 
-    const {skip:validateSkip,page: validatePage,limit:validateLimit,sortBy: validateSortBy, sortOrder:vaidateSortOrder }= validationPaginationAndSorting({page:page as string,limit:limit as string,sortBy:sortBy as string,sortOrder:sortOrder as string});
-    
-    
+    const { skip: validateSkip, page: validatePage, limit: validateLimit, sortBy: validateSortBy, sortOrder: vaidateSortOrder } = validationPaginationAndSorting({ page: page as string, limit: limit as string, sortBy: sortBy as string, sortOrder: sortOrder as string });
+
+
 
     /* -------------------- Service Call -------------------- */
 
@@ -172,16 +172,39 @@ const getThePost = async (req: express.Request, res: express.Response) => {
       search: searchingType,
       tags: tagList,
       is_featured: is_featured,
-      page:validatePage,
+      page: validatePage,
       skip: validateSkip,
-      limit:validateLimit,
+      limit: validateLimit,
       sortBy: validateSortBy,
       sortOrder: vaidateSortOrder
     });
 
     return res.status(200).json({
       success: true,
-      count: result.length,
+      data: result,
+    });
+
+  } catch (error) {
+    console.error("Post fetching failed:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching posts. Please try again.",
+    });
+  }
+};
+
+const getThePostById = async (req: express.Request, res: express.Response) => {
+
+
+  try {
+
+    const  id  = req.params.id;
+
+    const result =await postServices.getPostQueryById(id as string)
+
+    return res.status(200).json({
+      success: true,
       data: result,
     });
 
@@ -200,8 +223,8 @@ const getThePost = async (req: express.Request, res: express.Response) => {
 
 
 
-
 export const postController = {
   postThePost,
-  getThePost
+  getThePost,
+  getThePostById
 }

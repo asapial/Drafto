@@ -18,11 +18,11 @@ const getAllPostQuery = async (payload: {
     search: string | undefined,
     tags: string[] | [],
     is_featured: boolean | undefined,
-    page:number,
+    page: number,
     skip: number,
-    limit:number,
+    limit: number,
     sortBy: string,
-    sortOrder:string
+    sortOrder: string
 }) => {
 
     const searchingCondition: PostWhereInput[] = []
@@ -66,27 +66,75 @@ const getAllPostQuery = async (payload: {
 
 
     const result = await prisma.post.findMany({
-        skip:payload.skip,
-        take:payload.limit,
-        orderBy:{
-            [payload.sortBy]:payload.sortOrder
+        skip: payload.skip,
+        take: payload.limit,
+        orderBy: {
+            [payload.sortBy]: payload.sortOrder
         },
         where: {
             AND: searchingCondition
+        },
+        include: {
+            comments: {
+                where: {
+                    comment_parent: null
+                },
+                orderBy: {
+                    created_at: "desc"
+                },
+                include: {
+                    replies: {
+                        orderBy: {
+                            created_at: "asc"
+                        }
+                    }
+                }
+            },
+            _count: {
+                select: { comments: true }
+            }
         }
     });
     return {
-        page:payload.page,
-        skip:payload.skip,
-        limit:payload.limit,
-        data:result
+        page: payload.page,
+        skip: payload.skip,
+        limit: payload.limit,
+        data: result
     };
 
 }
 
+const getPostQueryById = async (params: string) => {
 
+    const result = await prisma.$transaction(async (tx) => {
+        const updateViewCount = await tx.post.update({
+            where: {
+                id: Number(params)
+            },
+            data: {
+                view_count: {
+                    increment: 1
+                }
+            }
+        })
+
+        const postData = await tx.post.findUniqueOrThrow({
+            where: {
+                id: Number(params)
+            }
+        })
+        return postData;
+    })
+
+    return result;
+
+
+
+
+}
 
 export const postServices = {
     createPostQuery,
-    getAllPostQuery
+    getAllPostQuery,
+    getPostQueryById
 }

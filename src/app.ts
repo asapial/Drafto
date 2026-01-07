@@ -3,6 +3,8 @@ import { postRoute } from "./modules/post/post.route";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
+import { commentRoute } from "./modules/comment/comment.route";
+
 
 
 const app:Application = express()
@@ -21,6 +23,7 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 
 
 app.use("/post",postRoute)
+app.use("/comment",commentRoute)
 
 
 export default app;
