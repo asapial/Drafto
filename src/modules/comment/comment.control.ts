@@ -153,10 +153,50 @@ const updateCommentById = async (req: Request, res: Response) => {
   }
 };
 
+
+const moderateCommentById = async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const commentId = Number(req.params.id);
+    const { comment_status } = req.body;
+
+    if (!comment_status ) {
+      return res.status(400).json({
+        success: false,
+        message: "Comment status is required",
+      });
+    }
+
+    const result = await commentService.moderateCommentById(
+      commentId,
+      comment_status
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Comment updated successfully",
+      data: result,
+    });
+
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const commentController = {
     postComment,
     getCommentById,
     getCommentByAuthorId,
     deleteCommentById,
-    updateCommentById
+    updateCommentById,
+    moderateCommentById
 }

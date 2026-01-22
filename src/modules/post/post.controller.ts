@@ -199,9 +199,9 @@ const getThePostById = async (req: express.Request, res: express.Response) => {
 
   try {
 
-    const  id  = req.params.id;
+    const id = req.params.id;
 
-    const result =await postServices.getPostQueryById(id as string)
+    const result = await postServices.getPostQueryById(id as string)
 
     return res.status(200).json({
       success: true,
@@ -219,12 +219,120 @@ const getThePostById = async (req: express.Request, res: express.Response) => {
 };
 
 
+const getMyPosts = async (req: express.Request, res: express.Response) => {
 
+
+  try {
+
+    const id = req.user.id;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Author information is missing. Please log in again.",
+      })
+    }
+
+    const result = await postServices.getMyPostsQuery(id as string)
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error) {
+    console.error("Post fetching failed:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching posts. Please try again.",
+    });
+  }
+};
+
+
+const updateThePost = async (req: express.Request, res: express.Response) => {
+  try {
+    const userData = req.user;
+    const postId = req.params.id;
+    const data = req.body;
+
+    if (!userData?.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    if (!Object.keys(data).length) {
+      return res.status(400).json({
+        success: false,
+        message: "No update data provided",
+      });
+    }
+
+    const result = await postServices.updatePostQuery(
+      userData,
+      postId as string,
+      data
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error: any) {
+    return res.status(
+      error.message === "Post not found" ? 404 :
+      error.message === "Forbidden" ? 403 : 500
+    ).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteThePost = async (req: express.Request, res: express.Response) => {
+  try {
+    const userData = req.user;
+    const postId = req.params.id;
+
+    if (!userData?.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const result = await postServices.deletePostQuery(
+      userData,
+      postId as string,
+
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error: any) {
+    return res.status(
+      error.message === "Post not found" ? 404 :
+      error.message === "Forbidden" ? 403 : 500
+    ).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 
 export const postController = {
   postThePost,
   getThePost,
-  getThePostById
+  getThePostById,
+  getMyPosts,
+  updateThePost,
+  deleteThePost
 }

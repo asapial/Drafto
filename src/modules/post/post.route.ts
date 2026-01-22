@@ -13,6 +13,11 @@ const router=Router();
 router.post("/",auth(),postController.postThePost)
 router.get("/",postController.getThePost)
 router.get("/:id",postController.getThePostById)
+router.get("/my/posts",auth(),postController.getMyPosts)
+router.patch("/:id",auth(),postController.updateThePost)
+router.delete("/:id",auth(),postController.deleteThePost)
+
+
 
 
 

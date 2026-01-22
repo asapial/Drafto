@@ -1,3 +1,5 @@
+import { error } from "node:console"
+import { CommentStatus } from "../../generated/prisma/enums"
 import { prisma } from "../../lib/prisma"
 
 const postCommentQuery = async (
@@ -121,11 +123,45 @@ const updateCommentById = async (
   return updated;
 };
 
+const moderateCommentById = async (
+  commentId: number,
+  comment_status: CommentStatus
+) => {
+
+  const comment = await prisma.comment.findFirst({
+    where: {
+      comment_id: commentId
+    },
+  });
+
+
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+
+  if(comment.comment_status===comment_status){
+    throw new Error("Your provided status is same as current status");
+  }
+
+  const updated = await prisma.comment.update({
+    where: {
+      comment_id: commentId,
+    },
+    data: {
+      comment_status,
+      updated_at: new Date(),
+    },
+  });
+
+  return updated;
+};
+
 export const commentService = {
     postCommentQuery,
     getCommentByIdQuery,
     getCommentByAuthorIdQuery,
     deleteCommentByIdQuery,
-    updateCommentById
+    updateCommentById,
+    moderateCommentById
 }
 
