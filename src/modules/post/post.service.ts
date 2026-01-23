@@ -11,6 +11,7 @@ const createPostQuery = async (data: Omit<Post, 'id' | 'created_at' | 'author_id
         }
     })
     return result;
+
 }
 
 const getAllPostQuery = async (payload: {
@@ -225,12 +226,52 @@ const deletePostQuery = async (
 
 }
 
+const postStatusQuery = async () => {
+
+  const [
+    postCount,
+    publishedPostCount,
+    featuredPostCount,
+    editedPostCount,
+    bannedPostCount,
+    commentCount,
+    publishedCommentCount,
+    totalViewCount
+  ] = await Promise.all([
+    prisma.post.count(),
+    prisma.post.count({ where: { post_status: "published" } }),
+    prisma.post.count({ where: { is_featured: true } }),
+    prisma.post.count({ where: { post_status: "edited" } }),
+    prisma.post.count({ where: { post_status: "banned" } }),
+    prisma.comment.count(),
+    prisma.comment.count({ where: { comment_status: "published" } }),
+    prisma.post.aggregate({
+        _sum:{
+            view_count:true
+        }
+    })
+  ]);
+
+  return {
+    total_posts: postCount,
+    published_posts: publishedPostCount,
+    featured_posts: featuredPostCount,
+    edited_posts: editedPostCount,
+    banned_posts: bannedPostCount,
+    total_comments: commentCount,
+    published_comments: publishedCommentCount,
+    totalViewCount: totalViewCount._sum.view_count 
+  };
+};
+
 export const postServices = {
     createPostQuery,
     getAllPostQuery,
     getPostQueryById,
     getMyPostsQuery,
     updatePostQuery,
-    deletePostQuery
+    deletePostQuery,
+    postStatusQuery,
+
 
 }

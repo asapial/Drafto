@@ -1,4 +1,4 @@
-import express from "express"
+import express, { NextFunction } from "express"
 import { postServices } from "./post.service"
 import { string } from "better-auth/*";
 import { type } from "node:os";
@@ -6,7 +6,7 @@ import { validationPaginationAndSorting } from "../../helpers/valiationPaginatio
 
 
 
-const postThePost = async (req: express.Request, res: express.Response) => {
+const postThePost = async (req: express.Request, res: express.Response,next:NextFunction) => {
   try {
     const {
       post_title,
@@ -20,33 +20,33 @@ const postThePost = async (req: express.Request, res: express.Response) => {
 
     /* ---------- Validation ---------- */
 
-    if (!post_title) {
-      return res.status(400).json({
-        success: false,
-        message: "Please enter a title for your post.",
-      });
-    }
+    // if (!post_title) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Please enter a title for your post.",
+    //   });
+    // }
 
-    if (typeof post_title !== "string" || post_title.length < 5) {
-      return res.status(400).json({
-        success: false,
-        message: "The post title should be at least 5 characters long.",
-      });
-    }
+    // if (typeof post_title !== "string" || post_title.length < 5) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "The post title should be at least 5 characters long.",
+    //   });
+    // }
 
-    if (!post_description) {
-      return res.status(400).json({
-        success: false,
-        message: "Please add some content to your post.",
-      });
-    }
+    // if (!post_description) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Please add some content to your post.",
+    //   });
+    // }
 
-    if (typeof post_description !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Post content must be written in text format.",
-      });
-    }
+    // if (typeof post_description !== "string") {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Post content must be written in text format.",
+    //   });
+    // }
 
     // if (!author_id) {
     //   return res.status(400).json({
@@ -55,12 +55,12 @@ const postThePost = async (req: express.Request, res: express.Response) => {
     //   });
     // }
 
-    if (post_tags && !Array.isArray(post_tags)) {
-      return res.status(400).json({
-        success: false,
-        message: "Tags should be provided as a list.",
-      });
-    }
+    // if (post_tags && !Array.isArray(post_tags)) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Tags should be provided as a list.",
+    //   });
+    // }
 
     // if (
     //   post_thumbnail &&
@@ -101,12 +101,13 @@ const postThePost = async (req: express.Request, res: express.Response) => {
     });
 
   } catch (error) {
-    console.error("Post creation failed:", error);
+    next(error);
+    // console.error("Post creation failed:", error);
 
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong while creating your post. Please try again.",
-    });
+    // return res.status(500).json({
+    //   success: false,
+    //   message: "Something went wrong while creating your post. Please try again.",
+    // });
   }
 };
 
@@ -194,7 +195,7 @@ const getThePost = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const getThePostById = async (req: express.Request, res: express.Response) => {
+const getThePostById = async (req: express.Request, res: express.Response,next:NextFunction) => {
 
 
   try {
@@ -209,12 +210,13 @@ const getThePostById = async (req: express.Request, res: express.Response) => {
     });
 
   } catch (error) {
-    console.error("Post fetching failed:", error);
+    next(error);
+    // console.error("Post fetching failed:", error);
 
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong while fetching posts. Please try again.",
-    });
+    // return res.status(500).json({
+    //   success: false,
+    //   message: "Something went wrong while fetching posts. Please try again.",
+    // });
   }
 };
 
@@ -292,6 +294,30 @@ const updateThePost = async (req: express.Request, res: express.Response) => {
   }
 };
 
+
+
+const postStatus = async (req: express.Request, res: express.Response) => {
+  try {
+    
+    const result = await postServices.postStatusQuery();
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error: any) {
+    return res.status(
+      error.message === "Post not found" ? 404 :
+      error.message === "Forbidden" ? 403 : 500
+    ).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 const deleteThePost = async (req: express.Request, res: express.Response) => {
   try {
     const userData = req.user;
@@ -334,5 +360,6 @@ export const postController = {
   getThePostById,
   getMyPosts,
   updateThePost,
-  deleteThePost
+  deleteThePost,
+  postStatus
 }

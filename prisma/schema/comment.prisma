@@ -1,0 +1,25 @@
+model Comment {
+  comment_id          Int           @id @default(autoincrement())
+  post_id             Int
+  author_id           String
+  comment_description String
+  created_at          DateTime @default(now())
+  updated_at          DateTime?
+  comment_status      CommentStatus @default(published)
+  comment_parent      Int?
+  posts               Post          @relation(fields: [post_id], references: [id],onDelete: Cascade)
+  commentsParents     Comment?      @relation("CommentReplies", fields: [comment_parent], references: [comment_id],onDelete:Cascade )
+  replies             Comment[]     @relation("CommentReplies")
+  // comments Comment[]
+
+  @@index([post_id])
+  @@map("comments")
+}
+
+
+
+enum CommentStatus {
+  published
+  edited
+  banned
+}
