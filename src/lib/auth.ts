@@ -20,18 +20,18 @@ const transporter = nodemailer.createTransport({
 
 
 export const auth = betterAuth({
-  user:{
-    additionalFields:{
-      role:{
-        type:['user','admin'],
-        required:false,
-        defaultValue:'user',
-        input:false,
+  user: {
+    additionalFields: {
+      role: {
+        type: ['user', 'admin'],
+        required: false,
+        defaultValue: 'user',
+        input: false,
         //  client: true
       },
-      phone:{
-        type:"string",
-        required:false,
+      phone: {
+        type: "string",
+        required: false,
         //  client: true
       }
     }
@@ -41,16 +41,16 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification:true
+    requireEmailVerification: true
   },
   trustedOrigins: [`${process.env.ORIGIN_URL}`],
 
   emailVerification: {
     sendOnSignUp: true,
-    
+
 
     sendVerificationEmail: async ({ user, url, token }, request) => {
- 
+
 
       console.log(user);
       const verificationLink = `https://yourdomain.com/verify-email?token=${token}`;
@@ -60,9 +60,16 @@ export const auth = betterAuth({
         to: user.email,
         subject: "Email Verification",
         text: `Hello ${user.name}, please verify your email using this link: ${verificationLink}`,
-        html: emailTemplate.emailVerificationTemplate(user,verificationLink),
+        html: emailTemplate.emailVerificationTemplate(user, verificationLink),
       });
 
+    },
+  },
+  baseURL: process.env.BETTER_AUTH_URL,
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
 });
